@@ -1,23 +1,53 @@
-// const express = require("express");
-// const {
-//   createRule,
-//   combineRules,
-//   getAllRules,
-// } = require("../controllers/ruleController");
+// const express = require('express');
+// const { createRule } = require('../controllers/ruleController');
 
 // const router = express.Router();
 
-// router.post("/create", createRule);
-// router.post("/combine", combineRules);
-// router.get("/", getAllRules);
+// // Route for creating a rule
+// router.post('/create_rule', createRule);
+
+// module.exports = router;
+
+// const express = require('express');
+// const { createRule } = require('../controllers/ruleController');
+
+// const router = express.Router();
+
+// // POST /api/rules/create
+// router.post('/create', createRule);
+
+// module.exports = router;
+
+// const express = require('express');
+// const router = express.Router();
+// const Rule = require('../models/ruleModel'); // Import your Mongoose model
+
+// // POST /api/rules - Save rule to database
+// router.post('/api/rules/createRules', async (req, res) => {
+//   try {
+//     const { ruleString } = req.body;
+
+//     // Create a new rule document
+//     const newRule = new Rule({
+//       ruleString, // Only store the ruleString
+//     });
+
+//     // Save to MongoDB
+//     await newRule.save();
+//     res.status(201).json({ message: 'Rule saved successfully!' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Failed to save rule.' });
+//   }
+// });
 
 // module.exports = router;
 
 const express = require('express');
-const { createRule } = require('../controllers/ruleController');
 const router = express.Router();
+const { createRule } = require('../controllers/ruleController');
 
-// Create a rule
-router.post('/api/rules', createRule);
+// POST /api/rules/createRules - Create a new rule
+router.post('/createRules', createRule);
 
 module.exports = router;

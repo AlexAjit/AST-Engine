@@ -1,76 +1,112 @@
-// const Rule = require("../models/Rule");
-
-// // Parse Rule String to AST
-// const parseRuleToAST = (ruleString) => {
-//   // Simplified parsing logic for demonstration
-//   const buildNode = (expression) => {
-//     if (expression.includes("AND") || expression.includes("OR")) {
-//       const operator = expression.includes("AND") ? "AND" : "OR";
-//       const [left, right] = expression.split(operator).map((s) => s.trim());
-//       return { type: "operator", value: operator, left: buildNode(left), right: buildNode(right) };
-//     } else {
-//       return { type: "operand", value: expression };
-//     }
-//   };
-//   return buildNode(ruleString);
-// };
+// const Rule = require('../models/Rule');
 
 // // Create Rule
 // exports.createRule = async (req, res) => {
-//   const { name, ruleString } = req.body;
 //   try {
-//     const ast = parseRuleToAST(ruleString);
-//     const rule = await Rule.create({ name, tree: ast });
+//     const { ruleString, ruleName } = req.body;
+
+//     // Validate inputs
+//     if (!ruleString || !ruleName) {
+//       return res.status(400).json({ message: "Rule string and rule name are required." });
+//     }
+
+//     // Create and save rule
+//     const newRule = new Rule({ ruleString, ruleName });
+//     await newRule.save();
+
+//     return res.status(201).json({ message: "Rule created successfully.", rule: newRule });
+//   } catch (error) {
+//     console.error("Error creating rule:", error);
+//     return res.status(500).json({ message: "Failed to create rule.", error: error.message });
+//   }
+// };
+
+// const Rule = require('../models/rule');  // Import the Rule model
+// const { parseRuleString, printTree } = require('../utils/ast'); // Assuming these functions are defined in your utils
+
+// // Function to generate a random 4-letter string
+// function generateRandomLetterString(length) {
+//   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+//   let result = '';
+//   const charactersLength = characters.length;
+
+//   for (let i = 0; i < length; i++) {
+//     const randomIndex = Math.floor(Math.random() * charactersLength);
+//     result += characters.charAt(randomIndex);
+//   }
+//   return result;
+// }
+
+// // Controller function for creating a rule
+// exports.createRule = async (req, res) => {
+//   try {
+//     const { ruleName, ruleString } = req.body;
+
+//     // Log the incoming request to see what data is being received
+//     console.log('Received Rule Data:', req.body);
+
+//     // Validate the input
+//     if (!ruleName || !ruleString) {
+//       return res.status(400).json({ error: 'ruleName and ruleString are required' });
+//     }
+
+//     // Parse the rule string to Abstract Syntax Tree (AST)
+//     const rootNode = parseRuleString(ruleString);
+//     if (!rootNode) {
+//       return res.status(400).json({ error: 'Invalid rule string format' });
+//     }
+
+//     // Create a new Rule object
+//     const rule = new Rule({
+//       ruleName,
+//       ruleAST: rootNode,  // Save the AST
+//     });
+
+//     // Save the rule to the database
+//     await rule.save();
+
+//     // Log the saved rule for verification
+//     console.log('Saved Rule:', rule);
+
+//     // Print the AST for debugging (optional)
+//     printTree(rootNode);
+
+//     // Send back the created rule as the response
 //     res.status(201).json(rule);
 //   } catch (error) {
-//     res.status(500).json({ message: error.message });
+//     console.error('Error creating rule:', error);  // Log the error
+//     res.status(500).json({ error: error.message });
 //   }
 // };
 
-// // Combine Rules
-// exports.combineRules = async (req, res) => {
-//   const { name, rules, operator } = req.body;
-//   try {
-//     const combinedTree = {
-//       type: "operator",
-//       value: operator,
-//       left: rules[0].tree,
-//       right: rules[1].tree,
-//     };
-//     const rule = await Rule.create({ name, tree: combinedTree });
-//     res.status(201).json(rule);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+const Rule = require('../models/rule');  // Ensure this matches the import in route
 
-// // Get All Rules
-// exports.getAllRules = async (req, res) => {
-//   try {
-//     const rules = await Rule.find();
-//     res.json(rules);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-const Rule = require('../models/Rule');
-
-const createRule = async (req, res) => {
-  const { ruleName, ruleInput, asciiStructure } = req.body;
-
+// Controller function for creating a rule
+exports.createRule = async (req, res) => {
   try {
-    const newRule = new Rule({
+    const { ruleName, ruleString } = req.body;
+
+    // Log the incoming request to see what data is being received
+    console.log('Received Rule Data:', req.body);
+
+    // Validate the input
+    if (!ruleName || !ruleString) {
+      return res.status(400).json({ error: 'ruleName and ruleString are required' });
+    }
+
+    // Create a new Rule object
+    const rule = new Rule({
       ruleName,
-      ruleInput,
-      asciiStructure,
+      ruleString,  // Save the ruleString
     });
 
-    await newRule.save();
-    res.status(201).json({ message: 'Rule created successfully', rule: newRule });
+    // Save the rule to the database
+    await rule.save();
+
+    // Send back the created rule as the response
+    res.status(201).json(rule);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating rule', error: error.message });
+    console.error('Error creating rule:', error);  // Log the error
+    res.status(500).json({ error: error.message });
   }
 };
-
-module.exports = { createRule };

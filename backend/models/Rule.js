@@ -1,26 +1,54 @@
-// const mongoose = require("mongoose");
+// const mongoose = require('mongoose');
 
-// const NodeSchema = new mongoose.Schema({
-//   type: { type: String, required: true }, // "operator" or "operand"
-//   value: { type: String, required: false }, // For operand nodes
-//   left: { type: mongoose.Schema.Types.Mixed, required: false },
-//   right: { type: mongoose.Schema.Types.Mixed, required: false },
+// const ruleSchema = new mongoose.Schema({
+//   ruleName: { type: String, required: true, unique: true },
+//   ruleAST: { type: Object, required: true }, // Store the AST structure
 // });
 
-// const RuleSchema = new mongoose.Schema({
-//   name: { type: String, required: true, unique: true },
-//   tree: { type: NodeSchema, required: true },
+// const Rule = mongoose.model('Rule', ruleSchema);
+// module.exports = Rule;
+// const mongoose = require('mongoose');
+
+// const nodeSchema = new mongoose.Schema({
+//   type: { type: String, required: true }, // operator or operand
+//   left: { type: mongoose.Schema.Types.Mixed, required: false }, // left child
+//   right: { type: mongoose.Schema.Types.Mixed, required: false }, // right child
+//   value: { type: mongoose.Schema.Types.Mixed, required: false }, // value for operand
 // });
 
-// module.exports = mongoose.model("Rule", RuleSchema);\
+// const ruleSchema = new mongoose.Schema({
+//   ruleName: { type: String, required: true, unique: true },
+//   ruleAST: { type: nodeSchema, required: true }, // Root node of the AST
+// });
+
+// module.exports = mongoose.model('Rule', ruleSchema);
+
+
+// const mongoose = require('mongoose');
+
+// // Define schema for rules
+// const ruleSchema = new mongoose.Schema({
+//   ruleString: {
+//     type: String,
+//     required: true,
+//   },
+// });
+
+// // Export the model
+// module.exports = mongoose.model('Rule', ruleSchema);
 
 const mongoose = require('mongoose');
 
-const RuleSchema = new mongoose.Schema({
-  ruleName: { type: String, required: true },
-  ruleInput: { type: String, required: true },
-  asciiStructure: { type: String, required: true },
+const ruleSchema = new mongoose.Schema({
+  ruleName: {
+    type: String,
+    required: true,
+  },
+  ruleString: {
+    type: String,
+    required: true,
+  },
 });
 
-const Rule = mongoose.model('Rule', RuleSchema);
-module.exports = Rule;
+module.exports = mongoose.model('Rule', ruleSchema);
+
