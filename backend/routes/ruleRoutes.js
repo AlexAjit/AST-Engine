@@ -43,11 +43,27 @@
 
 // module.exports = router;
 
+// const express = require('express');
+// const router = express.Router();
+// const { createRule } = require('../controllers/ruleController');
+
+// // POST /api/rules/createRules - Create a new rule
+// router.post('/createRules', createRule);
+
+// module.exports = router;
+
 const express = require('express');
 const router = express.Router();
-const { createRule } = require('../controllers/ruleController');
+const { createRule, combineRules, evaluateRule } = require('../controllers/ruleController');
 
 // POST /api/rules/createRules - Create a new rule
 router.post('/createRules', createRule);
 
+// POST /api/rules/combineRules - Combine multiple rules into one AST
+router.post('/combineRules', combineRules);
+
+// POST /api/rules/evaluateRule - Evaluate a rule's AST against data
+router.post('/evaluateRule', evaluateRule);
+
 module.exports = router;
+
