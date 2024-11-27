@@ -147,29 +147,99 @@ exports.createRule = async (req, res) => {
   }
 };
 
-// Combine multiple rules into a single AST
-exports.combineRules = async (req, res) => {
-  try {
-    const { rules } = req.body;
+// controllers/ruleController.js
 
-    // Validate the input
-    if (!Array.isArray(rules) || rules.length < 2) {
-      return res.status(400).json({ error: 'At least two rules are required' });
+// const Rule = require('../models/rule');  // Assuming the Rule model is imported
+
+// Controller to fetch rule by rule name
+exports.getRuleByName = async (req, res) => {
+  try {
+    const { ruleName } = req.params;
+    const rule = await Rule.findOne({ ruleName });
+
+    if (!rule) {
+      return res.status(404).json({ error: 'Rule not found' });
     }
 
-    // Parse all rule strings into ASTs
-    const asts = rules.map(ruleString => parseRuleString(ruleString));
-
-    // Combine the ASTs (implement your own combination logic here)
-    const combinedAst = combineAst(asts);
-
-    // Send back the combined AST
-    res.status(200).json({ combinedAst });
+    res.status(200).json({ ruleString: rule.ruleString });
   } catch (error) {
-    console.error('Error combining rules:', error);  // Log the error
+    console.error('Error fetching rule:', error);
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.createCombinedRule = async (req, res) => {
+  try {
+    const { rule1, rule2, operator } = req.body;
+    
+    if (!rule1 || !rule2 || !operator) {
+      return res.status(400).json({ error: 'rule1, rule2, and operator are required' });
+    }
+
+    // Combine the rule strings
+    const combinedRuleString = `(${rule1}) ${operator} (${rule2})`;
+
+    // Create and save the combined rule
+    const combinedRule = new Rule({
+      ruleName: `Combined Rule - ${Date.now()}`,
+      ruleString: combinedRuleString,
+    });
+
+    await combinedRule.save();
+
+    res.status(201).json({ combinedRule, combinedRuleString });
+  } catch (error) {
+    console.error('Error creating combined rule:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Create combined rule
+// exports.createCombinedRule = async (req, res) => {
+//   try {
+//     const { rule1, rule2, operator } = req.body;
+
+//     // Combine the rules
+//     const combinedRuleString = `(${rule1}) ${operator} (${rule2})`;
+
+//     // Save the combined rule to the database
+//     const combinedRule = new Rule({
+//       ruleName: `Combined Rule - ${Date.now()}`,
+//       ruleString: combinedRuleString,
+//     });
+
+//     await combinedRule.save();
+
+//     res.status(201).json(combinedRule);
+//   } catch (error) {
+//     console.error('Error creating combined rule:', error);
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// Combine multiple rules into a single AST
+// exports.combineRules = async (req, res) => {
+//   try {
+//     const { rules } = req.body;
+
+//     // Validate the input
+//     if (!Array.isArray(rules) || rules.length < 2) {
+//       return res.status(400).json({ error: 'At least two rules are required' });
+//     }
+
+//     // Parse all rule strings into ASTs
+//     const asts = rules.map(ruleString => parseRuleString(ruleString));
+
+//     // Combine the ASTs (implement your own combination logic here)
+//     const combinedAst = combineAst(asts);
+
+//     // Send back the combined AST
+//     res.status(200).json({ combinedAst });
+//   } catch (error) {
+//     console.error('Error combining rules:', error);  // Log the error
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 // Evaluate a rule against the provided data
 exports.evaluateRule = async (req, res) => {
