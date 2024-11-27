@@ -616,16 +616,26 @@ const RuleForm = ({ setCreatedRule }) => {
   const [asciiRepresentation, setAsciiRepresentation] = useState(''); // State for ASCII Tree
   const [loading, setLoading] = useState(false); // Loading state for API calls
 
-  // Handle real-time changes to the rule input
   const handleInputChange = (e) => {
     const input = e.target.value;
     setRuleInput(input);
-
-    // Parse the rule and generate ASCII dynamically as user types
-    const ast = parseRuleString(input); // Parse the rule string to an AST
-    const ascii = generateAsciiTree(ast); // Generate ASCII representation from AST
-    setAsciiRepresentation(ascii); // Update ASCII representation state
+  
+    // Check if the input is not null, empty, or just spaces
+    if (input && input.trim().length > 0) {
+      try {
+        // Parse the rule string to an AST only if input is valid
+        const ast = parseRuleString(input); // Parse the rule string to an AST
+        const ascii = generateAsciiTree(ast); // Generate ASCII representation from AST
+        setAsciiRepresentation(ascii); // Update ASCII representation state
+      } catch (error) {
+        console.error('Error parsing rule:', error);
+        setAsciiRepresentation('Error parsing rule'); // Optionally, display an error message in the ASCII representation area
+      }
+    } else {
+      setAsciiRepresentation(''); // Clear the ASCII representation if the input is empty
+    }
   };
+  
 
   // Handle form submission to create the rule
   const handleCreateRule = async () => {
@@ -636,7 +646,7 @@ const RuleForm = ({ setCreatedRule }) => {
 
     try {
       setLoading(true); // Show loading state while the request is being processed
-      const response = await axios.post('http://localhost:5000/api/create_rule', {
+      const response = await axios.post('http://localhost:5000/api/rules/createRules', {
         ruleName,
         ruleString: ruleInput, // Only send the rule name and rule input, not the ASCII tree
       });

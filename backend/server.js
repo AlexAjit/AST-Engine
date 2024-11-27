@@ -83,8 +83,36 @@
 // const PORT = process.env.PORT || 5000;
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+// const express = require('express');
+// const dotenv = require('dotenv');
+// const connectDB = require('./config/db');
+// const ruleRoutes = require('./routes/ruleRoutes');
+
+// dotenv.config();
+// connectDB();
+
+// const app = express();
+
+// // Middleware to parse JSON bodies
+// app.use(express.json());
+
+// // Routes
+// app.use('/api/rules', ruleRoutes);
+
+// // Error Handling Middleware
+// const errorHandler = require('./middleware/errorMiddleware');
+// app.use(errorHandler);
+
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// app.post('/api/rules/test', (req, res) => {
+//   res.send('Test POST route working');
+// });
+
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); // Import CORS
 const connectDB = require('./config/db');
 const ruleRoutes = require('./routes/ruleRoutes');
 
@@ -92,6 +120,9 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -105,7 +136,3 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-app.post('/api/rules/test', (req, res) => {
-  res.send('Test POST route working');
-});
