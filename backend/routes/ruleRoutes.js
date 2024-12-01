@@ -15,4 +15,4 @@ router.post('/createCombinedRule', createCombinedRule);
 // POST /api/rules/evaluateRule - Evaluate a rule's AST against data
 router.post('/evaluateRule', evaluateRule);
 
-module.exports = router;
+module.exports = router;    

@@ -57,7 +57,7 @@ const CombineRuleForm = ({ setCombinedRule }) => {
     <div className="flex space-x-6">
       <div className="w-1/2 bg-gray-900 p-6 border border-blue-600 rounded">
         <div className="mb-4">
-          <label className="block mb-2 text-white">Rule Name</label>
+          <label className="block mb-2 text-white">Search Rule</label>
           <input
             type="text"
             value={ruleName}
