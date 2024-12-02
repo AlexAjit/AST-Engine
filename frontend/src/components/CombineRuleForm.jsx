@@ -47,7 +47,7 @@ const CombineRuleForm = ({ setCombinedRule }) => {
         rule2,
         operator,
       });
-      console.log('Combined Rule Created:', response.data);
+      console.log('Combined Rule has been Created:', response.data);
     } catch (error) {
       console.error('Error saving combined rule:', error);
     }
